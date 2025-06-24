@@ -1,87 +1,64 @@
-# 🧠 Breast Cancer Prediction using Supervised Learning | Predictive Analytics
+# 🧬 Breast Cancer Classification using Supervised Learning
 
-This repository contains a predictive modeling assignment completed as part of the **Predictive Analytics (MSBA 6420)** course at the **Carlson School of Management**. The objective was to apply and compare different classification models to diagnose breast cancer using the **Wisconsin Diagnostic Breast Cancer (WDBC)** dataset.
+This project applies a range of supervised learning techniques to predict whether a breast cancer case is malignant or benign based on digitized image features. The analysis emphasizes **recall** as the primary evaluation metric due to the high cost of false negatives in a medical diagnosis context.
+
+This project was completed as part of the **Predictive Analytics (MSBA 6420)** course at the **Carlson School of Management**, University of Minnesota.
 
 ---
 
 ## 📦 Dataset
 
 - **Source**: UCI Machine Learning Repository  
-- **Link**: [WDBC Dataset](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))  
-- **Features**: 30 numerical features related to cell nuclei from digitized images of breast mass  
-- **Target**: Diagnosis result — Malignant (M) or Benign (B)
+- **Name**: Wisconsin Diagnostic Breast Cancer (WDBC)  
+- **Records**: 569 samples  
+- **Features**: 30 real-valued measurements (radius, texture, area, smoothness, etc.)  
+- **Target**: Diagnosis (Malignant = 1, Benign = 0)
+
+[🔗 Dataset Link](https://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+(Diagnostic))
 
 ---
 
-## 🎯 Project Goals
+## 🎯 Objective
 
-- Preprocess and prepare the dataset for modeling.
-- Build and evaluate three classifiers:
-  - **Decision Tree**
-  - **Logistic Regression**
+- Build and evaluate four classification models:
+  - **Support Vector Machine (SVM)**
   - **K-Nearest Neighbors (KNN)**
-- Perform **hyperparameter tuning** for each model to optimize predictive performance.
-- Evaluate models using classification metrics and compare their effectiveness.
+  - **Logistic Regression**
+  - **Decision Tree**
+- Focus on maximizing **recall** to minimize the risk of missing malignant cases.
+- Use **nested cross-validation** to ensure robust performance estimation and prevent overfitting during hyperparameter tuning.
 
 ---
 
-## ⚙️ Methodology
+## 🧠 Methodology
 
-### 🔹 Data Preprocessing
-- Diagnosis column encoded: `M → 1`, `B → 0`
-- Selected top 10 relevant features
-- Split into training and test sets (80/20)
-- Standardized features for KNN and Logistic Regression
-
----
-
-## 🧪 Models & Tuning
-
-### 🌳 Decision Tree
-- **Initial depth**: 5 → overfitting observed
-- **Tuned parameters**:
-  - `max_depth`: [3, 5, 10, None]
-  - `min_samples_split`: [2, 5, 10]
-  - `min_samples_leaf`: [1, 2, 4]
-  - `criterion`: ['gini', 'entropy']
-- **Best params**: `{'criterion': 'gini', 'max_depth': 10, 'min_samples_leaf': 2, 'min_samples_split': 5}`
-
-### 📊 Logistic Regression
-- **Tuned parameters**:
-  - `C`: [0.1, 1, 10, 100]
-  - `penalty`: ['l1', 'l2']
-  - `solver`: ['liblinear', 'lbfgs']
-- **Best params**: `{'C': 0.1, 'penalty': 'l1', 'solver': 'liblinear'}`
-
-### 🧭 K-Nearest Neighbors (KNN)
-- Features normalized using `StandardScaler`
-- **Tuned parameters**:
-  - `n_neighbors`: [3, 5, 7, 9, 11]
-  - `metric`: ['euclidean', 'manhattan']
-- **Best params**: `k = 5`
+- Selected 10 relevant features based on domain knowledge.
+- Standardized all features using `StandardScaler`.
+- Applied **nested cross-validation**:
+  - **Inner loop**: hyperparameter tuning with `RandomizedSearchCV`
+  - **Outer loop**: evaluation using 5-fold `StratifiedKFold`
+- Evaluated models based on:
+  - **Recall (primary metric)**
+  - Accuracy, Precision, F1-Score
+  - ROC Curve (AUC)
+  - Lift Curve
 
 ---
 
-## 📈 Results & Evaluation
+## 🧪 Results Summary
 
-| Metric                  | Decision Tree | KNN     | Logistic Regression |
-|-------------------------|---------------|---------|----------------------|
-| Training Accuracy       | 0.9802        | 0.9758  | 0.9758               |
-| Test Accuracy           | 0.9649        | 0.9737  | **0.9912**           |
-| Precision (Malignant)   | 0.95          | 0.98    | **1.00**             |
-| Recall (Malignant)      | 0.95          | 0.95    | **0.98**             |
-| F1 Score (Malignant)    | 0.95          | 0.96    | **0.99**             |
-
-🔍 **Conclusion**:  
-All models performed well, but **Logistic Regression** provided the most reliable and accurate results with a test accuracy of **99.12%** and perfect precision for malignant cases. It was the best balance of generalization and performance.
+| Model              | Mean Recall | Std Dev | AUC   |
+|--------------------|-------------|---------|-------|
+| **SVM**            | **0.9105**  | 0.0521  | **1.00** |
+| K-Nearest Neighbors| 0.9152      | 0.0566  | 0.99  |
+| Logistic Regression| 0.9055      | 0.0543  | 0.99  |
+| Decision Tree      | 0.8732      | 0.0513  | 0.98  |
 
 ---
 
-## 🛠️ Technologies Used
+## 🏆 Best Model
 
-- Python
-- Scikit-learn
-- Pandas
-- NumPy
-- Matplotlib / Seaborn (optional for visualization)
-- Jupyter Notebook
+**Support Vector Machine (SVM)** demonstrated the most balanced and reliable performance:
+- **Perfect AUC (1.00)** indicating flawless separation of malignant vs. benign cases.
+- Strong recall and high consistency across folds.
+- Lift curves showed SVM effectively prioritizes malignant cases.
