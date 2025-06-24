@@ -2,7 +2,7 @@
 
 This project applies a range of supervised learning techniques to predict whether a breast cancer case is malignant or benign based on digitized image features. The analysis emphasizes **recall** as the primary evaluation metric due to the high cost of false negatives in a medical diagnosis context.
 
-This project was completed as part of the **Predictive Analytics (MSBA 6420)** course at the **Carlson School of Management**, University of Minnesota.
+This project was completed as part of the **Predictive Analytics** course at the **Carlson School of Management**, University of Minnesota.
 
 ---
 
